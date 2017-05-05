@@ -1,6 +1,8 @@
 ---
 # defaults file for ansible-aws-role
 aws_output_format: 'text'
-aws_region: 's3-api.us-geo.objectstorage.service.networklayer.com'
-aws_access_key_id: 'Key-ID'
-aws_secret_access_key: 'Secret'
+aws_manage_config: true
+
+# Used to set the credential file when defined:
+#aws_access_key_id
+#aws_secret_access_key
