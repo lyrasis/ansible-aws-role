@@ -15,6 +15,12 @@ Role Variables
 See [defaults](./defaults/main.yml) for documented example of variables. 
 
 
+Example Playbook
+----------------
+
+See [tests](./tests/test.yml) for an example playbook
+
+
 License
 -------
 

@@ -1,29 +1,37 @@
 ---
 # tasks file for ansible-aws-role
 
+- name: set aws_pip_package for python 3
+  set_fact:
+    aws_pip_package: python3-pip
+  when: aws_python3
+
 - name: 'Install Python PIP'
   tags: 'aws'
   apt:
-    pkg=python-pip
-    state=latest
+    pkg: "{{ aws_pip_package }}"
+    state: latest
 
+# NOTE: need forcereinstall to fix edge-case issue with downgrading then
+# re-upgrading or vice-versa
 - name: 'Install AWS CLI'
   tags: 'aws'
   pip:
-    name=awscli
-    state=latest
+    name: awscli
+    state: forcereinstall
+    extra_args: --upgrade
 
 - name: 'Create the AWS config directory'
   tags: 'aws'
   file:
-    path=/root/.aws
-    state=directory
-    mode=0700
+    path: /root/.aws
+    state: directory
+    mode: 0700
 
 - name: 'Copy AWS CLI config'
   tags: 'aws'
   template:
-    src=aws.config.j2
-    dest=/root/.aws/config
-    mode=0600
+    src: aws.config.j2
+    dest: /root/.aws/config
+    mode: 0600
   when: aws_manage_config

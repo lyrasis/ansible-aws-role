@@ -1,5 +1,48 @@
 ---
 - hosts: localhost
   remote_user: root
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    aws_python3: true
+
   roles:
-    - ansible-aws-role
+    - role: ansible-aws-role
+      aws_access_key_id: "test_key_id"
+      aws_secret_access_key: "test_secret_key"
+
+  tasks:
+  - name: get aws version
+    command: "aws --version"
+    register: aws_version
+    changed_when: false
+
+  # NOTE: aws-cli reports its version in stderr rather than stdout when it's run under python 2
+  - name: construct version message
+    set_fact:
+      version_message: "{{ aws_version.stdout + aws_version.stderr }}"
+  - debug:
+      var: version_message
+
+  - name: fail if aws-cli not installed
+    fail:
+      msg: "aws-cli failed to install"
+    when: "'aws-cli' not in version_message"
+
+  - name: fail if aws-cli not running under python 3 when aws_python3 is true
+    fail:
+      msg: "aws-cli is not running under python 3"
+    when: aws_python3 and 'Python/3' not in version_message
+
+  - name: fail if aws-cli not running under python 2 when aws_python3 is not true
+    fail:
+      msg: "aws-cli is not running under python 2"
+    when: not aws_python3 and 'Python/2' not in version_message
+
+  - name: get aws location
+    command: "which aws"
+    register: which_aws
+    changed_when: false
+
+  - debug:
+      var: which_aws.stdout
