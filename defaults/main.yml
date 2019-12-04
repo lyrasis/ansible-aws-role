@@ -6,3 +6,6 @@ aws_manage_config: true
 # Used to set the credential file when defined:
 #aws_access_key_id
 #aws_secret_access_key
+
+# Flag for python 3 support
+aws_python3:  false

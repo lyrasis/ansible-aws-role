@@ -13,8 +13,7 @@ galaxy_info:
     - all
 
   galaxy_tags:
-    - server
-    - backup
-    - hashbackup
+    - aws
+    - awscli
 
 dependencies: []
